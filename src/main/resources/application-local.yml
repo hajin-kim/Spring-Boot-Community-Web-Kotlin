@@ -1,0 +1,2 @@
+server:
+  port: 8080 # Apple Airplay is using 5000
