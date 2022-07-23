@@ -1,6 +1,6 @@
 package com.web.controller
 
-import com.web.annotation.SocialUser
+import com.web.config.security.annotations.SocialUser
 import com.web.domain.CommunityUser
 import com.web.service.BoardService
 import org.springframework.data.domain.Pageable

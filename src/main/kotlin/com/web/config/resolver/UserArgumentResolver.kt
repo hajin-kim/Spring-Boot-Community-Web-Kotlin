@@ -1,6 +1,6 @@
 package com.web.config.resolver
 
-import com.web.annotation.SocialUser
+import com.web.config.security.annotations.SocialUser
 import com.web.domain.CommunityUser
 import com.web.domain.enums.SocialType
 import com.web.repository.CommunityUserRepository
