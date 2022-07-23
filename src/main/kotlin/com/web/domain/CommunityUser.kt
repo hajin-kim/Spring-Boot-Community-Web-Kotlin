@@ -25,7 +25,7 @@ class CommunityUser(
     val email: String,
 
     @Column
-    val pincipal: String?,
+    val principal: String?,
 
     @Column
     @Enumerated(EnumType.STRING)

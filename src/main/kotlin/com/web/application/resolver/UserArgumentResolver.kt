@@ -77,7 +77,7 @@ class UserArgumentResolver(
             name = map["name"].toString(),
             password = null,
             email = map["email"].toString(),
-            pincipal = map["id"].toString(),
+            principal = map["id"].toString(),
             socialType = socialType,
         )
     }
@@ -88,7 +88,7 @@ class UserArgumentResolver(
             name = propertyMap["nickname"]!!,
             password = null,
             email = map["kaccount_email"].toString(),
-            pincipal = map["id"].toString(),
+            principal = map["id"].toString(),
             socialType = SocialType.KAKAO,
         )
     }

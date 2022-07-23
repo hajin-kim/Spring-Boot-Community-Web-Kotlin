@@ -23,7 +23,7 @@ class CommandLineRunnerConfiguration {
                     name = "havi",
                     password = "test",
                     email = "havi@gmail.com",
-                    pincipal = null,
+                    principal = null,
                     socialType = null,
                 ),
             )
