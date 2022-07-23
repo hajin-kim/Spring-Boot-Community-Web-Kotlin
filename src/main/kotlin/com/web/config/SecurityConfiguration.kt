@@ -19,9 +19,6 @@ import org.springframework.web.filter.CharacterEncodingFilter
 import java.util.Objects
 import java.util.stream.Collectors
 
-/**
- * Created by KimYJ on 2017-09-12.
- */
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {

@@ -14,9 +14,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDateTime
 
-/**
- * Created by KimYJ on 2017-07-12.
- */
 @RunWith(SpringRunner::class)
 @DataJpaTest
 class JpaMappingTest {
@@ -28,6 +25,7 @@ class JpaMappingTest {
 
     @Autowired
     var boardRepository: BoardRepository? = null
+
     @Before
     fun init() {
         val communityUser: CommunityUser = communityUserRepository!!.save(
@@ -36,7 +34,7 @@ class JpaMappingTest {
                 .password("test")
                 .email(email)
                 .createdDate(LocalDateTime.now())
-                .build()
+                .build(),
         )
         boardRepository!!.save(
             Board.builder()
@@ -46,7 +44,7 @@ class JpaMappingTest {
                 .boardType(BoardType.FREE)
                 .createdDate(LocalDateTime.now())
                 .updatedDate(LocalDateTime.now())
-                .user(communityUser).build()
+                .user(communityUser).build(),
         )
     }
 
