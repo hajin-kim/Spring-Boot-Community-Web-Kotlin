@@ -1,6 +1,6 @@
-package com.web.config.resolver
+package com.web.application.resolver
 
-import com.web.config.security.annotations.SocialUser
+import com.web.application.security.annotations.SocialUser
 import com.web.domain.CommunityUser
 import com.web.domain.enums.SocialType
 import com.web.repository.CommunityUserRepository
@@ -34,44 +34,43 @@ class UserArgumentResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): Any? {
+    ): CommunityUser? {
         val session: HttpSession =
             (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request.session
-        val communityUser = session.getAttribute("user") as CommunityUser
+        val communityUser = session.getAttribute("user") as CommunityUser?
         return getUser(communityUser, session)
     }
 
     private fun getUser(communityUser: CommunityUser?, session: HttpSession): CommunityUser? {
         var communityUser = communityUser
-        if (communityUser == null) {
-            try {
-                val authentication: OAuth2AuthenticationToken =
-                    SecurityContextHolder.getContext().authentication as OAuth2AuthenticationToken
-                val map: Map<String, Any> = authentication.principal.attributes
-                val convertUser = convertUser(authentication.authorizedClientRegistrationId, map)!!
-                communityUser = communityUserRepository.findByEmail(convertUser.email)
-                if (communityUser == null) {
-                    communityUser = communityUserRepository.save(convertUser)
-                }
-                setRoleIfNotSame(communityUser, authentication, map)
-                session.setAttribute("user", communityUser)
-            } catch (e: ClassCastException) {
-                return communityUser
+        return communityUser ?: try {
+            val authentication: OAuth2AuthenticationToken =
+                SecurityContextHolder.getContext().authentication as OAuth2AuthenticationToken
+            val map: Map<String, Any> = authentication.principal.attributes
+            val convertUser = convertUser(authentication.authorizedClientRegistrationId, map)!!
+            communityUser = communityUserRepository.findByEmail(convertUser.email)
+            if (communityUser == null) {
+                communityUser = communityUserRepository.save(convertUser)
             }
+            setRoleIfNotSame(communityUser, authentication, map)
+            session.setAttribute("user", communityUser)
+
+            communityUser
+        } catch (e: ClassCastException) {
+            return communityUser
         }
-        return communityUser
     }
 
-    private fun convertUser(authority: String, map: Map<String, Any>): CommunityUser? {
-        if (SocialType.FACEBOOK.isEquals(authority)) return getModernUser(
+    private fun convertUser(authority: String, map: Map<String, Any>): CommunityUser? =
+        if (SocialType.FACEBOOK.isEquals(authority)) getModernUser(
             SocialType.FACEBOOK,
             map,
-        ) else if (SocialType.GOOGLE.isEquals(authority)) return getModernUser(
+        ) else if (SocialType.GOOGLE.isEquals(authority)) getModernUser(
             SocialType.GOOGLE,
             map,
-        ) else if (SocialType.KAKAO.isEquals(authority)) return getKaKaoUser(map)
-        return null
-    }
+        ) else if (SocialType.KAKAO.isEquals(authority)) getKaKaoUser(map)
+        else
+            null
 
     private fun getModernUser(socialType: SocialType, map: Map<String, Any>): CommunityUser {
         return CommunityUser(

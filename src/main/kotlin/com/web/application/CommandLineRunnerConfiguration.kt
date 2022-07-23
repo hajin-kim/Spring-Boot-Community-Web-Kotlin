@@ -1,4 +1,4 @@
-package com.web.config
+package com.web.application
 
 import com.web.domain.Board
 import com.web.domain.CommunityUser

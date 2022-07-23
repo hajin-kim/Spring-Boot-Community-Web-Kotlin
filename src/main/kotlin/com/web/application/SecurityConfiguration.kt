@@ -1,6 +1,6 @@
-package com.web.config
+package com.web.application
 
-import com.web.config.security.oauth.CustomOAuth2Provider
+import com.web.application.security.oauth.CustomOAuth2Provider
 import com.web.domain.enums.SocialType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties
@@ -77,23 +77,25 @@ class SecurityConfiguration {
     }
 
     private fun getRegistration(clientProperties: OAuth2ClientProperties, client: String): ClientRegistration? {
-        if ("google" == client) {
-            val registration = clientProperties.registration["google"]
-            return CommonOAuth2Provider.GOOGLE.getBuilder(client)
-                .clientId(registration!!.clientId)
-                .clientSecret(registration.clientSecret)
-                .scope("email", "profile")
-                .build()
+        return when (client) {
+            "google" -> {
+                val registration = clientProperties.registration["google"]
+                CommonOAuth2Provider.GOOGLE.getBuilder(client)
+                    .clientId(registration!!.clientId)
+                    .clientSecret(registration.clientSecret)
+                    .scope("email", "profile")
+                    .build()
+            }
+            "facebook" -> {
+                val registration = clientProperties.registration["facebook"]
+                CommonOAuth2Provider.FACEBOOK.getBuilder(client)
+                    .clientId(registration!!.clientId)
+                    .clientSecret(registration.clientSecret)
+                    .userInfoUri("https://graph.facebook.com/me?fields=id,name,email,link")
+                    .scope("email")
+                    .build()
+            }
+            else -> null
         }
-        if ("facebook" == client) {
-            val registration = clientProperties.registration["facebook"]
-            return CommonOAuth2Provider.FACEBOOK.getBuilder(client)
-                .clientId(registration!!.clientId)
-                .clientSecret(registration.clientSecret)
-                .userInfoUri("https://graph.facebook.com/me?fields=id,name,email,link")
-                .scope("email")
-                .build()
-        }
-        return null
     }
 }

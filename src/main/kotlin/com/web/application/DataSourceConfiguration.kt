@@ -1,4 +1,4 @@
-package com.web.config
+package com.web.application
 
 import org.h2.server.web.WebServlet
 import org.springframework.boot.web.servlet.ServletRegistrationBean

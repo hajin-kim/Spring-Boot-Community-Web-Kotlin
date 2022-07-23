@@ -1,6 +1,6 @@
-package com.web.config
+package com.web.application
 
-import com.web.config.resolver.UserArgumentResolver
+import com.web.application.resolver.UserArgumentResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

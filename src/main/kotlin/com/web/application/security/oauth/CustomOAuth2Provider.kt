@@ -1,4 +1,4 @@
-package com.web.config.security.oauth
+package com.web.application.security.oauth
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.core.AuthorizationGrantType

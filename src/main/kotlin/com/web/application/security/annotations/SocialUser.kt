@@ -1,4 +1,4 @@
-package com.web.config.security.annotations
+package com.web.application.security.annotations
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
