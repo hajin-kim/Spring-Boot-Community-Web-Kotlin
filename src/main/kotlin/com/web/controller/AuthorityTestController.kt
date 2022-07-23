@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class AuthorityTestController {
     @GetMapping("/facebook")
-    fun facebook(): String = "22"
+    fun facebook(): String = "facebook"
 
     @GetMapping("/google")
     fun google(): String = "google"
