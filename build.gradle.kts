@@ -35,13 +35,14 @@ dependencies {
     implementation("junit:junit:4.13.1")
     implementation("com.h2database:h2")
 
-    runtimeOnly("org.springframework.boot:spring-boot-devtools")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks {
     bootRun {
+        classpath(configurations.developmentOnly)
         dependsOn(ktlintFormat)
         args("--spring.profiles.active=local")
     }
