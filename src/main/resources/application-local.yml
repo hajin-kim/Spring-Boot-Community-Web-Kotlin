@@ -1,2 +1,12 @@
 server:
   port: 8080 # Apple Airplay is using 5000
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+    prefix: "file:src/main/resources/templates/"
+  web:
+    resources:
+      static-locations: "file:src/main/resources/static/"
