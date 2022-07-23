@@ -25,7 +25,8 @@ class UserArgumentResolver(
 ) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.getParameterAnnotation(SocialUser::class.java) != null && parameter.parameterType == CommunityUser::class.java
+        return parameter.getParameterAnnotation(SocialUser::class.java) != null &&
+            parameter.parameterType == CommunityUser::class.java
     }
 
     override fun resolveArgument(
