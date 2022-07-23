@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <title>Board Form</title>
-    <link rel="stylesheet" th:href="@{/css/base.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 </head>
 <body>
 <div th:replace="layout/header::header"></div>
@@ -14,7 +14,7 @@
         <h1>게시글 목록</h1>
     </div>
     <div class="pull-right" style="width:100px;margin:10px 0;">
-        <a href="/board" class="btn btn-primary btn-block">등록</a>
+        <a class="btn btn-primary btn-block" href="/board">등록</a>
     </div>
     <br/><br/><br/>
     <div id="mainHide">
@@ -42,13 +42,15 @@
     <br/>
     <!-- Pagination -->
     <nav aria-label="Page navigation" style="text-align:center;">
-        <ul class="pagination" th:with="startNumber=${T(java.lang.Math).floor(boardList.number/10)}*10+1, endNumber=(${boardList.totalPages} > ${startNumber}+9) ? ${startNumber}+9 : ${boardList.totalPages}">
+        <ul class="pagination"
+            th:with="startNumber=${T(java.lang.Math).floor(boardList.number/10)}*10+1, endNumber=(${boardList.totalPages} > ${startNumber}+9) ? ${startNumber}+9 : ${boardList.totalPages}">
             <li><a aria-label="Previous" href="/board/list?page=1">&laquo;</a></li>
             <li th:style="${boardList.first} ? 'display:none'">
                 <a th:href="@{/board/list(page=${boardList.number})}">&lsaquo;</a>
             </li>
 
-            <li th:each="page :${#numbers.sequence(startNumber, endNumber)}" th:class="(${page} == ${boardList.number}+1) ? 'active'">
+            <li th:class="(${page} == ${boardList.number}+1) ? 'active'"
+                th:each="page :${#numbers.sequence(startNumber, endNumber)}">
                 <a th:href="@{/board/list(page=${page})}" th:text="${page}"><span class="sr-only"></span></a>
             </li>
 

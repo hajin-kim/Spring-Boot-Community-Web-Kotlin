@@ -21,7 +21,7 @@ enum class CustomOAuth2Provider {
     protected fun getBuilder(
         registrationId: String?,
         method: ClientAuthenticationMethod?,
-        redirectUri: String?
+        redirectUri: String?,
     ): ClientRegistration.Builder {
         val builder = ClientRegistration.withRegistrationId(registrationId)
         builder.clientAuthenticationMethod(method)

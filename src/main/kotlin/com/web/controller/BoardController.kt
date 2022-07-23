@@ -20,7 +20,7 @@ class BoardController(
     fun board(
         @RequestParam(value = "idx", defaultValue = "0")
         idx: Long,
-        model: Model
+        model: Model,
     ): String {
         model.addAttribute("board", boardService.findBoardByIdx(idx))
         return "/board/form"

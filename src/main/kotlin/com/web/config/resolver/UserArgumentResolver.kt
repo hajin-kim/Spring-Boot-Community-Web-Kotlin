@@ -21,8 +21,8 @@ import javax.servlet.http.HttpSession
 
 @Component
 class UserArgumentResolver(
-    private val communityUserRepository: CommunityUserRepository
-): HandlerMethodArgumentResolver {
+    private val communityUserRepository: CommunityUserRepository,
+) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.getParameterAnnotation(SocialUser::class.java) != null && parameter.parameterType == CommunityUser::class.java
@@ -32,7 +32,7 @@ class UserArgumentResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any? {
         val session: HttpSession =
             (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request.session
@@ -64,10 +64,10 @@ class UserArgumentResolver(
     private fun convertUser(authority: String, map: Map<String, Any>): CommunityUser? {
         if (SocialType.FACEBOOK.isEquals(authority)) return getModernUser(
             SocialType.FACEBOOK,
-            map
+            map,
         ) else if (SocialType.GOOGLE.isEquals(authority)) return getModernUser(
             SocialType.GOOGLE,
-            map
+            map,
         ) else if (SocialType.KAKAO.isEquals(authority)) return getKaKaoUser(map)
         return null
     }
@@ -93,12 +93,16 @@ class UserArgumentResolver(
         )
     }
 
-    private fun setRoleIfNotSame(communityUser: CommunityUser, authentication: OAuth2AuthenticationToken, map: Map<String, Any>) {
+    private fun setRoleIfNotSame(
+        communityUser: CommunityUser,
+        authentication: OAuth2AuthenticationToken,
+        map: Map<String, Any>,
+    ) {
         if (!authentication.authorities.contains(SimpleGrantedAuthority(communityUser.socialType?.roleType))) {
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
                 map,
                 "N/A",
-                AuthorityUtils.createAuthorityList(communityUser.socialType?.roleType)
+                AuthorityUtils.createAuthorityList(communityUser.socialType?.roleType),
             )
         }
     }

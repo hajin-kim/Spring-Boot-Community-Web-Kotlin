@@ -1,7 +1,7 @@
 package com.web.config
 
-import com.web.domain.enums.SocialType
 import com.web.config.security.oauth.CustomOAuth2Provider
+import com.web.domain.enums.SocialType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties
 import org.springframework.context.annotation.Bean
@@ -24,7 +24,7 @@ import java.util.stream.Collectors
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration: WebSecurityConfigurerAdapter() {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         val filter = CharacterEncodingFilter()
@@ -61,7 +61,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
     @Bean
     fun clientRegistrationRepository(
         oAuth2ClientProperties: OAuth2ClientProperties,
-        @Value("\${custom.oauth2.kakao.client-id}") kakaoClientId: String?
+        @Value("\${custom.oauth2.kakao.client-id}") kakaoClientId: String?,
     ): ClientRegistrationRepository {
         val registrations = oAuth2ClientProperties.registration.keys.stream()
             .map { client: String -> getRegistration(oAuth2ClientProperties, client) }
@@ -72,7 +72,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
                 .clientId(kakaoClientId)
                 .clientSecret("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
                 .jwkSetUri("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
-                .build()
+                .build(),
         )
         return InMemoryClientRegistrationRepository(registrations)
     }

@@ -15,7 +15,7 @@ class CommandLineRunnerConfiguration {
     @Throws(Exception::class)
     fun runner(
         communityUserRepository: CommunityUserRepository,
-        boardRepository: BoardRepository
+        boardRepository: BoardRepository,
     ): CommandLineRunner {
         return CommandLineRunner {
             val communityUser: CommunityUser = communityUserRepository.save(
