@@ -1,5 +1,6 @@
 package com.web.domain
 
+import com.web.domain.base.AuditLoggingBase
 import com.web.domain.enums.SocialType
 import java.io.Serializable
 import javax.persistence.Column

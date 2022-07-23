@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class DataSourceConfig {
+class DataSourceConfiguration {
     @Bean
     fun h2servletRegistration(): ServletRegistrationBean<WebServlet> {
         val registrationBean = ServletRegistrationBean(WebServlet())

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession
 
 @Component
 class UserArgumentResolver(
-    private val    communityUserRepository: CommunityUserRepository
+    private val communityUserRepository: CommunityUserRepository
 ): HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -94,11 +94,11 @@ class UserArgumentResolver(
     }
 
     private fun setRoleIfNotSame(communityUser: CommunityUser, authentication: OAuth2AuthenticationToken, map: Map<String, Any>) {
-        if (!authentication.authorities.contains(SimpleGrantedAuthority(communityUser.socialType.roleType))) {
+        if (!authentication.authorities.contains(SimpleGrantedAuthority(communityUser.socialType?.roleType))) {
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
                 map,
                 "N/A",
-                AuthorityUtils.createAuthorityList(communityUser.socialType.roleType)
+                AuthorityUtils.createAuthorityList(communityUser.socialType?.roleType)
             )
         }
     }

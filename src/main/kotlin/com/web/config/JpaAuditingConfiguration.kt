@@ -1,4 +1,4 @@
-package com.web
+package com.web.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing

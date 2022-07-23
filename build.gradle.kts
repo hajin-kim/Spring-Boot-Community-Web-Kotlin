@@ -33,8 +33,8 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-java8time")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("junit:junit:4.13.1")
+    implementation("com.h2database:h2")
 
-    runtimeOnly("com.h2database:h2")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
