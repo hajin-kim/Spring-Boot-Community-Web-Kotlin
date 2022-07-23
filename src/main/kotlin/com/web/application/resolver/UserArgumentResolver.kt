@@ -57,20 +57,23 @@ class UserArgumentResolver(
 
             communityUser
         } catch (e: ClassCastException) {
-            return communityUser
+            communityUser
         }
     }
 
     private fun convertUser(authority: String, map: Map<String, Any>): CommunityUser? =
-        if (SocialType.FACEBOOK.isEquals(authority)) getModernUser(
-            SocialType.FACEBOOK,
-            map,
-        ) else if (SocialType.GOOGLE.isEquals(authority)) getModernUser(
-            SocialType.GOOGLE,
-            map,
-        ) else if (SocialType.KAKAO.isEquals(authority)) getKaKaoUser(map)
-        else
-            null
+        when (authority) {
+            SocialType.FACEBOOK.value -> getModernUser(
+                SocialType.FACEBOOK,
+                map,
+            )
+            SocialType.GOOGLE.value -> getModernUser(
+                SocialType.GOOGLE,
+                map,
+            )
+            SocialType.KAKAO.value -> getKaKaoUser(map)
+            else -> null
+        }
 
     private fun getModernUser(socialType: SocialType, map: Map<String, Any>): CommunityUser {
         return CommunityUser(
