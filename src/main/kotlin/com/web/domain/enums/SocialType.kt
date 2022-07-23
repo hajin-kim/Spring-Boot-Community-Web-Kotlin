@@ -12,8 +12,4 @@ enum class SocialType(val value: String) {
 
     val roleType: String
         get() = ROLE_PREFIX + value.uppercase(Locale.getDefault())
-
-    fun isEquals(authority: String): Boolean {
-        return value == authority
-    }
 }
