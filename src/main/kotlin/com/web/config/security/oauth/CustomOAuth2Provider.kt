@@ -7,7 +7,8 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 enum class CustomOAuth2Provider {
     KAKAO {
         override fun getBuilder(registrationId: String?): ClientRegistration.Builder {
-            val builder = getBuilder(registrationId, ClientAuthenticationMethod.POST, DEFAULT_LOGIN_REDIRECT_URL)
+            val builder =
+                getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, DEFAULT_LOGIN_REDIRECT_URL)
             builder.scope("profile")
             builder.authorizationUri("https://kauth.kakao.com/oauth/authorize")
             builder.tokenUri("https://kauth.kakao.com/oauth/token")

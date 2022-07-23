@@ -8,22 +8,23 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.web.filter.CharacterEncodingFilter
 import java.util.Objects
 import java.util.stream.Collectors
 
-@Configuration
 @EnableWebSecurity
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
-    @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
+@Configuration
+class SecurityConfiguration {
+    // Spring Boot 2.7+ (Security 5.7+)
+    @Bean
+    fun configure(http: HttpSecurity): SecurityFilterChain {
         val filter = CharacterEncodingFilter()
         http
             .authorizeRequests()
@@ -53,6 +54,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .and()
             .addFilterBefore(filter, CsrfFilter::class.java)
             .csrf().disable()
+        return http.build()
     }
 
     @Bean
@@ -67,8 +69,8 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
         registrations.add(
             CustomOAuth2Provider.KAKAO.getBuilder("kakao")
                 .clientId(kakaoClientId)
-                .clientSecret("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
-                .jwkSetUri("test") //필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
+                .clientSecret("test") // 필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
+                .jwkSetUri("test") // 필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
                 .build(),
         )
         return InMemoryClientRegistrationRepository(registrations)
