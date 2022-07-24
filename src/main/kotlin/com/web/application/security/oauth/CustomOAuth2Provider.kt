@@ -9,10 +9,13 @@ enum class CustomOAuth2Provider {
         override fun getBuilder(registrationId: String?): ClientRegistration.Builder {
             val builder =
                 getBuilder(registrationId, ClientAuthenticationMethod.CLIENT_SECRET_POST, DEFAULT_LOGIN_REDIRECT_URL)
-            builder.scope("profile")
+            builder.scope(
+                "profile_nickname",
+                "account_email",
+            ) // Refer to https://developers.kakao.com/console/app/{appId}/product/login/scope
             builder.authorizationUri("https://kauth.kakao.com/oauth/authorize")
             builder.tokenUri("https://kauth.kakao.com/oauth/token")
-            builder.userInfoUri("https://kapi.kakao.com/v1/user/me")
+            builder.userInfoUri("https://kapi.kakao.com/v2/user/me")
             builder.userNameAttributeName("id")
             builder.clientName("Kakao")
             return builder
@@ -27,7 +30,7 @@ enum class CustomOAuth2Provider {
         val builder = ClientRegistration.withRegistrationId(registrationId)
         builder.clientAuthenticationMethod(method)
         builder.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        builder.redirectUriTemplate(redirectUri)
+        builder.redirectUri(redirectUri)
         return builder
     }
 
