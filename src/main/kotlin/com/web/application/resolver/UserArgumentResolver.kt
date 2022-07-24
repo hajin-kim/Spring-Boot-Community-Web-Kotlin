@@ -40,18 +40,19 @@ class UserArgumentResolver(
         return session.getAttribute("user")
             ?.let { it as CommunityUser } // 세션 attribute 에 "user"가 있을 경우 그대로 반환
             ?: runCatching { // 세션에 없을 경우
-                // 인증 정보를 가져옴 (currently authenticated principal, or an authentication request token)
-                val authentication: OAuth2AuthenticationToken =
-                    SecurityContextHolder.getContext().authentication as OAuth2AuthenticationToken
-                val map: Map<String, Any> = authentication.principal.attributes
+                // 인증 결과 제공된 정보를 가져옴 (currently authenticated principal, or an authentication request token)
+                val authentication = SecurityContextHolder.getContext().authentication as OAuth2AuthenticationToken
+                val principalAttributes = authentication.principal.attributes // 사용자 정보
 
-                // 인증 정보로부터 CommunityUser 임시 생성 (DAO)
-                val convertUser = createTempUserOrNull(authentication.authorizedClientRegistrationId, map)!!
+                // 인증 정보로부터 CommunityUser 임시 생성
+                val tempUser =
+                    createTempUserOrNull(authentication.authorizedClientRegistrationId, principalAttributes)!!
 
-                // CommunityUser 조회해보고 없으면 저장
-                val communityUser = communityUserRepository.findByEmail(convertUser.email)
-                    ?: communityUserRepository.save(convertUser)
-                setRoleIfNotSame(communityUser, authentication, map) // 권한 동기화
+                // CommunityUser 조회해보고 없으면 새로 생성
+                val communityUser = communityUserRepository.findByEmail(tempUser.email)
+                    ?: communityUserRepository.save(tempUser)
+
+                setRoleIfNotSame(communityUser, authentication, principalAttributes) // 권한이 올바르게 설정되지 않은 경우 설정
                 session.setAttribute("user", communityUser) // 세션 attribute 에 추가
 
                 communityUser
@@ -60,6 +61,7 @@ class UserArgumentResolver(
 
     private fun createTempUserOrNull(authority: String, map: Map<String, Any>): CommunityUser? {
         val socialType = SocialType.values().firstOrNull { it.type == authority }
+            ?: return null
 
         val name: String
         val password: String? = null
@@ -86,8 +88,6 @@ class UserArgumentResolver(
                 email = kakaoAccount["email"].toString()
                 principal = map["id"].toString()
             }
-
-            else -> return null
         }
 
         return CommunityUser(
@@ -102,14 +102,14 @@ class UserArgumentResolver(
     private fun setRoleIfNotSame(
         communityUser: CommunityUser,
         authentication: OAuth2AuthenticationToken,
-        map: Map<String, Any>,
+        principalAttributes: Map<String, Any>,
     ) {
         if (!authentication.authorities.contains(SimpleGrantedAuthority(communityUser.socialType?.roleType))) {
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
-                map,
+                principalAttributes,
                 "N/A",
                 AuthorityUtils.createAuthorityList(communityUser.socialType?.roleType),
-            )
+            ) // Another implementation of AbstractAuthenticationToken
         }
     }
 }
