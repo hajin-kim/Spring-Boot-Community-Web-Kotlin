@@ -16,8 +16,6 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.web.filter.CharacterEncodingFilter
-import java.util.Objects
-import java.util.stream.Collectors
 
 @EnableWebSecurity
 @Configuration
@@ -61,35 +59,39 @@ class SecurityConfiguration {
     fun clientRegistrationRepository(
         oAuth2ClientProperties: OAuth2ClientProperties,
         @Value("\${custom.oauth2.kakao.client-id}") kakaoClientId: String?,
+        @Value("\${custom.oauth2.kakao.client-secret}") kakaoClientSecret: String?,
     ): ClientRegistrationRepository {
-        val registrations = oAuth2ClientProperties.registration.keys.stream()
+        val registrations = oAuth2ClientProperties
+            .registration
+            .keys
+            .asSequence()
             .map { client: String -> getRegistration(oAuth2ClientProperties, client) }
-            .filter { obj: ClientRegistration? -> Objects.nonNull(obj) }
-            .collect(Collectors.toList())
-        registrations.add(
-            CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-                .clientId(kakaoClientId)
-                .clientSecret("test") // 필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
-                .jwkSetUri("test") // 필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
-                .build(),
-        )
+            .filterNotNull()
+            .plus(
+                CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+                    .clientId(kakaoClientId)
+                    .clientSecret(kakaoClientSecret)
+                    .jwkSetUri("test") // 필요없는 값인데 null이면 실행이 안되도록 설정되어 있음
+                    .build(),
+            )
+            .toList()
         return InMemoryClientRegistrationRepository(registrations)
     }
 
-    private fun getRegistration(clientProperties: OAuth2ClientProperties, client: String): ClientRegistration? {
-        return when (client) {
+    private fun getRegistration(clientProperties: OAuth2ClientProperties, client: String): ClientRegistration? =
+        when (client) {
             "google" -> {
-                val registration = clientProperties.registration["google"]
+                val registration = clientProperties.registration["google"]!!
                 CommonOAuth2Provider.GOOGLE.getBuilder(client)
-                    .clientId(registration!!.clientId)
+                    .clientId(registration.clientId)
                     .clientSecret(registration.clientSecret)
                     .scope("email", "profile")
                     .build()
             }
             "facebook" -> {
-                val registration = clientProperties.registration["facebook"]
+                val registration = clientProperties.registration["facebook"]!!
                 CommonOAuth2Provider.FACEBOOK.getBuilder(client)
-                    .clientId(registration!!.clientId)
+                    .clientId(registration.clientId)
                     .clientSecret(registration.clientSecret)
                     .userInfoUri("https://graph.facebook.com/me?fields=id,name,email,link")
                     .scope("email")
@@ -97,5 +99,4 @@ class SecurityConfiguration {
             }
             else -> null
         }
-    }
 }
