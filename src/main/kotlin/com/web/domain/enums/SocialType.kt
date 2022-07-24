@@ -2,7 +2,7 @@ package com.web.domain.enums
 
 import java.util.Locale
 
-enum class SocialType(val value: String) {
+enum class SocialType(val type: String) {
     FACEBOOK("facebook"),
     GOOGLE("google"),
     KAKAO("kakao"),
@@ -11,5 +11,5 @@ enum class SocialType(val value: String) {
     private val ROLE_PREFIX = "ROLE_"
 
     val roleType: String
-        get() = ROLE_PREFIX + value.uppercase(Locale.getDefault())
+        get() = ROLE_PREFIX + type.uppercase(Locale.getDefault())
 }
